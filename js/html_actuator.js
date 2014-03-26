@@ -9,7 +9,7 @@ function HTMLActuator() {
   this.score = 0;
 }
 
-dogeSayings = ['kolléga', 'szigorlat', 'OS', 'megtagadva', 'ösztöndíj', 'háló', 'fél pont kéne', 'aláírva', 'hát jó jó jó', 'sör', 'Neptun' ,'#SLAG',
+dogeSayings = ['kolléga', 'szigorlat', 'OS', 'megtagadva', 'ösztöndíj', 'háló', 'fél pont kéne', 'aláírva', 'hát jó jó jó', 'sör', 'Neptun' ,'#SWENG',
 'ülj le 1-es', '<potz.h>',]
 
 HTMLActuator.prototype.actuate = function (grid, metadata) {
