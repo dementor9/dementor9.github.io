@@ -8,50 +8,23 @@ function GameManager(size, InputManager, Actuator, ScoreManager) {
 
   this.inputManager.on("move", this.move.bind(this));
   this.inputManager.on("restart", this.restart.bind(this));
-  this.inputManager.on("keepPlaying", this.keepPlaying.bind(this));
-  this.inputManager.on("showInfo", this.showInfo.bind(this));  
-  this.inputManager.on("hideInfo", this.hideInfo.bind(this));    
 
   this.setup();
 }
 
 // Restart the game
 GameManager.prototype.restart = function () {
-  this.actuator.continue();
+  this.actuator.restart();
   this.setup();
-};
-
-// Keep playing after winning
-GameManager.prototype.keepPlaying = function () {
-  this.keepPlaying = true;
-  this.actuator.continue();
-};
-
-GameManager.prototype.showInfo = function () {
-  this.actuator.showInfo();
-};
-
-
-GameManager.prototype.hideInfo = function () {
-  this.actuator.hideInfo();
-};
-
-GameManager.prototype.isGameTerminated = function () {
-  if (this.over || (this.won && !this.keepPlaying)) {
-    return true;
-  } else {
-    return false;
-  }
 };
 
 // Set up the game
 GameManager.prototype.setup = function () {
-  this.grid        = new Grid(this.size);
+  this.grid         = new Grid(this.size);
 
-  this.score       = 0;
-  this.over        = false;
-  this.won         = false;
-  this.keepPlaying = false;
+  this.score        = 0;
+  this.over         = false;
+  this.won          = false;
 
   // Add the initial tiles
   this.addStartTiles();
@@ -84,11 +57,10 @@ GameManager.prototype.actuate = function () {
   }
 
   this.actuator.actuate(this.grid, {
-    score:      this.score,
-    over:       this.over,
-    won:        this.won,
-    bestScore:  this.scoreManager.get(),
-    terminated: this.isGameTerminated()
+    score:     this.score,
+    over:      this.over,
+    won:       this.won,
+    bestScore: this.scoreManager.get()
   });
 
 };
@@ -115,7 +87,7 @@ GameManager.prototype.move = function (direction) {
   // 0: up, 1: right, 2:down, 3: left
   var self = this;
 
-  if (this.isGameTerminated()) return; // Don't do anything if the game's over
+  if (this.over || this.won) return; // Don't do anything if the game's over
 
   var cell, tile;
 
@@ -151,7 +123,7 @@ GameManager.prototype.move = function (direction) {
           self.score += merged.value;
 
           // The mighty 2048 tile
-          if (merged.value === 2048) self.won = true;
+          if (merged.value === 65536) self.won = true;
         } else {
           self.moveTile(tile, positions.farthest);
         }
